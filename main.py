@@ -1,8 +1,9 @@
 #rus - импорт всех ресурсов. telebot является частью библиотеки pyTelegramBotAPI, перед использованием установите эту библиотеку с помощью pip
 #eng - importing all resources. Object "telebot" is part of library "pyTelegramBotAPI", install this library from pip before use
+
+import os
 import telebot
 import qrcode
-import os
 import config
 
 #rus - Создание экземпляра класса telebot. Первым идет токен, полученный у BotFather, далее указана разметка ля текста с помощью HTML
@@ -26,8 +27,7 @@ def helper(message):
 @bot.message_handler(content_types = ['text'])
 def create_code(message):
 	bot.reply_to(message, 'Текст принят.\nНачинаю генерацию кода 🔨')
-	data = message.text
-	data.encode('utf-8')
+	data = message.text.encode('utf-8')
 	filename = str(message.chat.id)
 	img = qrcode.make(data)
 	img.save(filename)
@@ -35,10 +35,7 @@ def create_code(message):
 	bot.send_message(message.chat.id, 'Готово! Твой код собран и готов к использованию🎉')
 	bot.send_photo(message.chat.id, photo)
 	photo.close()
-	#rus - эта часть позволяет генерировать изображения и отправлять их, не сохраняя их при этом на сервере. Эта система нужна для того, чтобы бот работал без БД 
-	#eng - this part is deleting a generated image after sending it to user. This feature is help bot to work without DataBase
-	path = filename
-	os.remove(path)
+	os.remove(filename)
 	bot.send_message(message.chat.id, 'Спасибо за использование! Надеюсь вам понравилось😊 ')
 
 #rus - запуск бота
